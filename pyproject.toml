@@ -1,0 +1,13 @@
+[project]
+name = "claude-health-trends-upload"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "chainlit>=2.9.6",
+    "docling",
+    "langgraph>=1.0.9",
+    "litellm>=1.81.13",
+    "pydantic>=2.12.5",
+    "python-dotenv>=1.2.1",
+]

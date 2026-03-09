@@ -1,0 +1,12 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "health_report_agent": "./main.py:app",
+    "query_agent": "./main.py:query_app"
+  },
+  "env": ".env",
+  "python_version": "3.11",
+  "dockerfile_lines": [
+    "RUN pip install docling litellm python-dotenv pydantic langgraph"
+  ]
+}
