@@ -7,3 +7,6 @@ run:
 
 run-ui:
 	.venv/bin/chainlit run chainlit_app.py
+
+run-notion-mcp:
+	.venv/bin/python3 mcp/notion_mcp.py

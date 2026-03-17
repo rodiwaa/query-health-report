@@ -6,7 +6,6 @@ import tempfile
 from pathlib import Path
 
 import chainlit as cl
-from langchain_core.messages import HumanMessage
 from litellm import completion
 
 from main import TRENDS_OUTPUT, app, query_app
@@ -48,20 +47,26 @@ async def on_chat_start():
 async def on_message(msg: cl.Message):
     # File attached → always run upload pipeline
     if not msg.elements:
-        intent = await asyncio.get_event_loop().run_in_executor(
-            None, lambda: classify_intent(msg.content)
-        )
+        try:
+            intent = await asyncio.get_event_loop().run_in_executor(
+                None, lambda: classify_intent(msg.content)
+            )
+        except Exception:
+            intent = "query"
         if intent == "upload":
             await cl.Message(content="Please attach a PDF health report to upload.").send()
             return
 
         # Query intent
         await cl.Message(content="Searching your health data...").send()
-        result = await asyncio.get_event_loop().run_in_executor(
-            None, lambda: query_app.invoke({"messages": [HumanMessage(content=msg.content)]})
-        )
-        answer = result["messages"][-1].content
-        await cl.Message(content=answer).send()
+        try:
+            result = await asyncio.get_event_loop().run_in_executor(
+                None, lambda: query_app.invoke({"messages": [{"role": "user", "content": msg.content}]})
+            )
+            answer = result["messages"][-1].content
+            await cl.Message(content=answer).send()
+        except Exception as e:
+            await cl.Message(content=f"Error querying health data: {e}").send()
         return
 
     file_el = msg.elements[0]

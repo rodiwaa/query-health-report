@@ -1,20 +1,24 @@
 """Phase 2 — Basic Graph: upload → markdown → parse → json → save → trend."""
 
+import asyncio
 import json
 import os
+import sys
 import warnings
 from datetime import datetime
 from pathlib import Path
 from typing import Annotated
 
 from dotenv import load_dotenv
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
 from docling.document_converter import DocumentConverter
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from litellm import completion
 from pydantic import BaseModel
 
-load_dotenv()
+load_dotenv(os.path.expanduser("~/.env/.env"))
 
 
 def format_date_label(raw: str) -> str:
@@ -156,6 +160,29 @@ def save_node(state: State) -> dict:
     }
 
 
+def save_notion_node(state: State) -> dict:
+    """Send health_json to Notion via MCP stdio server."""
+    async def _call():
+        params = StdioServerParameters(
+            command=sys.executable,
+            args=[str(Path(__file__).parent / "mcp" / "notion_mcp.py")],
+            env={**os.environ},
+        )
+        async with stdio_client(params) as (read, write):
+            async with ClientSession(read, write) as session:
+                await session.initialize()
+                result = await session.call_tool("save_to_notion", {"health_json": state.health_json})
+                return result.content[0].text
+
+    try:
+        summary = asyncio.run(_call())
+        print(f"[save_notion] {summary}")
+        return {"messages": [{"role": "assistant", "content": f"Notion: {summary}"}]}
+    except Exception as exc:
+        print(f"[save_notion] error (non-fatal): {exc}")
+        return {"messages": [{"role": "assistant", "content": f"Notion save skipped: {exc}"}]}
+
+
 def trend_node(state: State) -> dict:
     """Load all versioned reports and render health_trends.html with React + Chart.js."""
     report_files = sorted(REPORTS_DIR.glob("*.json"))
@@ -188,7 +215,13 @@ def trend_node(state: State) -> dict:
         for label, _, _ in entries:
             if label not in all_labels_set:
                 all_labels_set.append(label)
-    all_labels_set.sort()
+    def parse_label_date(label: str):
+        try:
+            return datetime.strptime(label, "%-d-%B-%Y")
+        except ValueError:
+            return datetime.min
+
+    all_labels_set.sort(key=parse_label_date)
 
     colors = [
         "#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f",
@@ -311,6 +344,7 @@ graph.add_node("markdown", markdown_node)
 graph.add_node("parse", parse_node)
 graph.add_node("json", json_node)
 graph.add_node("save", save_node)
+graph.add_node("save_notion", save_notion_node)
 graph.add_node("trend", trend_node)
 
 graph.add_edge(START, "upload")
@@ -318,7 +352,9 @@ graph.add_edge("upload", "markdown")
 graph.add_edge("markdown", "parse")
 graph.add_edge("parse", "json")
 graph.add_edge("json", "save")
+graph.add_edge("json", "save_notion")
 graph.add_edge("save", "trend")
+graph.add_edge("save_notion", "trend")
 graph.add_edge("trend", END)
 
 app = graph.compile()
