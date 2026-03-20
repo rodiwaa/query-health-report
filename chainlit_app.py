@@ -1,29 +1,16 @@
 """Chainlit UI for health report upload and metric extraction."""
 
 import asyncio
-import os
 import tempfile
 from pathlib import Path
 
 import chainlit as cl
-from litellm import completion
+from langchain_core.messages import HumanMessage
 
-from main import TRENDS_OUTPUT, app, query_app
-
-INTENT_MODEL = os.getenv("INTENT_MODEL", "groq/llama-3.1-8b-instant")
-
-
-def classify_intent(text: str) -> str:
-    """Returns 'upload' or 'query' using a fast Groq model."""
-    prompt = (
-        "Classify this user message as exactly one word: 'upload' or 'query'.\n"
-        "'upload' = user wants to upload or add a health report.\n"
-        "'query' = user is asking a question about their health data.\n"
-        f"Message: {text}\nAnswer:"
-    )
-    response = completion(model=INTENT_MODEL, messages=[{"role": "user", "content": prompt}], max_tokens=5)
-    label = response.choices[0].message.content.strip().lower()
-    return "upload" if "upload" in label else "query"
+from src.config.settings import TRENDS_OUTPUT
+from src.graph.pipeline import app
+from src.graph.query import query_app
+from src.utils.intent import classify_intent
 
 
 @cl.action_callback("open_charts")
@@ -47,26 +34,20 @@ async def on_chat_start():
 async def on_message(msg: cl.Message):
     # File attached → always run upload pipeline
     if not msg.elements:
-        try:
-            intent = await asyncio.get_event_loop().run_in_executor(
-                None, lambda: classify_intent(msg.content)
-            )
-        except Exception:
-            intent = "query"
+        intent = await asyncio.get_event_loop().run_in_executor(
+            None, lambda: classify_intent(msg.content)
+        )
         if intent == "upload":
             await cl.Message(content="Please attach a PDF health report to upload.").send()
             return
 
         # Query intent
         await cl.Message(content="Searching your health data...").send()
-        try:
-            result = await asyncio.get_event_loop().run_in_executor(
-                None, lambda: query_app.invoke({"messages": [{"role": "user", "content": msg.content}]})
-            )
-            answer = result["messages"][-1].content
-            await cl.Message(content=answer).send()
-        except Exception as e:
-            await cl.Message(content=f"Error querying health data: {e}").send()
+        result = await asyncio.get_event_loop().run_in_executor(
+            None, lambda: query_app.invoke({"messages": [HumanMessage(content=msg.content)]})
+        )
+        answer = result["messages"][-1].content
+        await cl.Message(content=answer).send()
         return
 
     file_el = msg.elements[0]

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Health Trends</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 24px; background: #f9fafb; color: #111; }
+    h1 { font-size: 1.5rem; margin-bottom: 8px; }
+    p.subtitle { color: #666; margin-bottom: 24px; font-size: 0.9rem; }
+    .chart-container { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); max-width: 1000px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const CHART_DATA = {"labels": ["12-OCTOBER-2025", "17-JANUARY-2026", "19-OCTOBER-2024"], "datasets": [{"label": "hdl / ldl ratio (Ratio)", "data": [0.35, 0.35, 0.43], "borderColor": "#4e79a7", "backgroundColor": "#4e79a7", "pointRadius": 5, "spanGaps": true}, {"label": "hdl cholesterol - direct (mg/dL)", "data": [46.0, 44.0, 44.0], "borderColor": "#f28e2b", "backgroundColor": "#f28e2b", "pointRadius": 5, "spanGaps": true}, {"label": "ldl / hdl ratio (Ratio)", "data": [2.9, 2.9, 2.3], "borderColor": "#e15759", "backgroundColor": "#e15759", "pointRadius": 5, "spanGaps": true}, {"label": "ldl cholesterol - direct (mg/dL)", "data": [101.0, 126.0, 101.0], "borderColor": "#76b7b2", "backgroundColor": "#76b7b2", "pointRadius": 5, "spanGaps": true}, {"label": "non-hdl cholesterol (mg/dL)", "data": [153.1, 137.6, 106.4], "borderColor": "#59a14f", "backgroundColor": "#59a14f", "pointRadius": 5, "spanGaps": true}, {"label": "tc/ hdl cholesterol ratio (Ratio)", "data": [2.21, 4.1, 3.4], "borderColor": "#edc948", "backgroundColor": "#edc948", "pointRadius": 5, "spanGaps": true}, {"label": "total cholesterol (mg/dL)", "data": [199.0, 182.0, 200.0], "borderColor": "#b07aa1", "backgroundColor": "#b07aa1", "pointRadius": 5, "spanGaps": true}, {"label": "trig / hdl ratio (Ratio)", "data": [2.9, 1.8, 1.51], "borderColor": "#ff9da7", "backgroundColor": "#ff9da7", "pointRadius": 5, "spanGaps": true}, {"label": "triglycerides (mg/dL)", "data": [4.3, 80.0, 66.0], "borderColor": "#9c755f", "backgroundColor": "#9c755f", "pointRadius": 5, "spanGaps": true}, {"label": "vldl cholesterol (mg/dL)", "data": [20.28, 15.96, 13.26], "borderColor": "#bab0ac", "backgroundColor": "#bab0ac", "pointRadius": 5, "spanGaps": true}]};
+
+    function App() {
+      const canvasRef = React.useRef(null);
+
+      React.useEffect(() => {
+        const ctx = canvasRef.current.getContext('2d');
+        const chart = new Chart(ctx, {
+          type: 'line',
+          data: CHART_DATA,
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              title: { display: true, text: 'Health Metrics Over Time', font: { size: 16 } },
+            },
+            scales: {
+              x: { ticks: { display: true }, title: { display: false } },
+              y: { title: { display: true, text: 'Value' } },
+            },
+          },
+        });
+        return () => chart.destroy();
+      }, []);
+
+      return React.createElement('div', null,
+        React.createElement('h1', null, 'Health Trends'),
+        React.createElement('p', { className: 'subtitle' }, `3 report(s) loaded · ${CHART_DATA.datasets.length} metric(s) tracked`),
+        React.createElement('div', { className: 'chart-container' },
+          React.createElement('canvas', { ref: canvasRef })
+        )
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+  </script>
+</body>
+</html>

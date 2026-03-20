@@ -30,7 +30,4 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
-
-# HTML, REPORT ARTIFACTS
-*.html
 .reports/
