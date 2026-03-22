@@ -43,6 +43,13 @@ Got stacks of blood test PDFs sitting in a folder somewhere? Health Metrics Trac
 **Document Parsing**: Docling
 **Observability**: LangSmith
 
+## Top Down View
+![Docker compose commands](./assets/images/overview.png)
+![Docker compose commands](./assets/images/ingest-query-pp.png.png)
+![Docker compose commands](./assets/images/overview.png)
+Demo GIFs attached below...
+
+
 ## 🚀 Quick Setup
 
 ### Prerequisites
