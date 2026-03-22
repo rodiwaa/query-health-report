@@ -133,15 +133,15 @@ Three targeted changes reduced end-to-end upload latency from **32–42s → 2.6
 #### After Optimisation
 ![After](./assets/upload-latency-after.png)
 
-## Demo
+# Demo
 
-#### Uploading a Health Report
+## Uploading a Health Report
 ![Upload Demo](./assets/health-upload-demo.gif)
 
-#### Querying Your Reports
+## Querying Your Reports
 ![Query Demo](./assets/query-report-demo.gif)
 
-#### Health Trends Chart
+## Health Trends Chart
 ![Chart](./assets/trends.png)
 
 ## 📄 License
