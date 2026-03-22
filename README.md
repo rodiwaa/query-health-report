@@ -45,8 +45,6 @@ Got stacks of blood test PDFs sitting in a folder somewhere? Health Metrics Trac
 
 ## 🐦 Bird's Eye View
 
-![Overview](./assets/overview.png)
-
 ![Pipelines](./assets/ingest-query-pp.png)
 
 Demo GIFs attached below 👇 ...
