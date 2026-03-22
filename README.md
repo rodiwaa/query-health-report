@@ -44,11 +44,12 @@ Got stacks of blood test PDFs sitting in a folder somewhere? Health Metrics Trac
 **Observability**: LangSmith
 
 ## Top Down View
-![Docker compose commands](./assets/images/overview.png)
-![Docker compose commands](./assets/images/ingest-query-pp.png.png)
-![Docker compose commands](./assets/images/overview.png)
-Demo GIFs attached below...
 
+![Overview](./assets/images/overview.png)
+
+![Pipelines](./assets/images/ingest-query-pp.png.png)
+
+Demo GIFs attached below...
 
 ## 🚀 Quick Setup
 
