@@ -45,9 +45,9 @@ Got stacks of blood test PDFs sitting in a folder somewhere? Health Metrics Trac
 
 ## Top Down View
 
-![Overview](./assets/images/overview.png)
+![Overview](./assets/overview.png)
 
-![Pipelines](./assets/images/ingest-query-pp.png.png)
+![Pipelines](./assets/ingest-query-pp.png.png)
 
 Demo GIFs attached below...
 
