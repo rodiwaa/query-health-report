@@ -1,4 +1,4 @@
-# Health Metrics Tracker 🩺
+# Health Metrics Tracker 📈
 
 **Your health data, finally making sense over time.**
 
@@ -6,11 +6,11 @@ Got stacks of blood test PDFs sitting in a folder somewhere? Health Metrics Trac
 
 ## What It Does
 
-📄 **Upload Reports** → Drop in a PDF health report (blood tests, labs, etc.)
-🤖 **AI Extraction** → Automatically pulls out test names, values, units, and reference ranges
-📊 **Visualise Trends** → See how your metrics change across multiple reports over time
-💬 **Ask Questions** → Query your data in plain English — *"What's my latest LDL?"* or *"How has my glucose changed?"*
-🔒 **Privacy First** → Runs locally, PII is stripped before processing
+- 📄 **Upload Reports** → Drop in a PDF health report (blood tests, labs, etc.)
+- 🤖 **AI Extraction** → Automatically pulls out test names, values, units, and reference ranges
+- 📊 **Visualise Trends** → See how your metrics change across multiple reports over time
+- 💬 **Ask Questions** → Query your data in plain English — *"What's my latest LDL?"* or *"How has my glucose changed?"*
+- 🔒 **Privacy First** → Runs locally, PII is stripped before processing
 
 ## Key Features
 
