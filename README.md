@@ -43,13 +43,13 @@ Got stacks of blood test PDFs sitting in a folder somewhere? Health Metrics Trac
 **Document Parsing**: Docling
 **Observability**: LangSmith
 
-## Top Down View
+## 🐦 Bird's Eye View
 
 ![Overview](./assets/overview.png)
 
-![Pipelines](./assets/ingest-query-pp.png.png)
+![Pipelines](./assets/ingest-query-pp.png)
 
-Demo GIFs attached below...
+Demo GIFs attached below 👇 ...
 
 ## 🚀 Quick Setup
 
